@@ -2,11 +2,13 @@
 
 #generate the number of links that are connected to other dataset
 #author	: Nur Aini
-#date	: January 24, 2012
+#since	: January 24, 2012
 #Usage	:	chmod +x linkstat.sh
 #		./linkstat.sh ntriplesfile	
 
-grep -E -v 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type|\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf' $1 | 
+skipproperties='http://www.w3.org/1999/02/22-rdf-syntax-ns#type|\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf|http://www.w3.org/2002/07/owl#equivalentproperty|^_'
+
+grep -E -v -i $skipproperties $1 | 
 awk '{
  s=$1; p=$2; o=$3
 one=match(s, /<(.*)#/, subj)

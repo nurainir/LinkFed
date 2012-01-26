@@ -4,7 +4,7 @@
 #author	: Nur Aini
 #date	: January 24, 2012
 #Usage	:	chmod +x linkstatfragmen.sh
-#		./linkstatfragmen.sh ntriplesfile
+#		./linkstatfragmen.sh ntriplesfile numberofpartition
 
 
 function clean_up {
@@ -26,40 +26,42 @@ for file in $1/*
    do
 	if [ -d "$file" ]; then
 		let part+=1
-		grep -E -v 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type|\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf' $file/*.nt | 
+		grep -E -v -i '\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf|http://www.w3.org/2002/07/owl#equivalentproperty' $file/*.n3 | 
 		awk -v partno=${part} '{
  		s=$1; p=$2; o=$3
-		
-		#print dirnt 
-		#calculate links to other dataset
-		one=match(s, /<(.*)#/, subj)
-		if(one==0)
-			one=match(s, /<(.*)\/*>$/, subj) 
-		subvalue=subj[1]
+		type="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+		if(p !~ type && s !~ /^_/)
+		{ 
+			#calculate links to other dataset
+			one=match(s, /<(.*)#/, subj)
+			if(one==0)
+				one=match(s, /<(.*)\/*>$/, subj) 
+			subvalue=subj[1]
 
-		if(one!=0)
-			one=match(subj[1], /(.*)resource/, tes) 
-		if(one!=0)
-			subvalue=tes[1]
+			if(one!=0)
+				one=match(subj[1], /(.*)resource/, tes) 
+			if(one!=0)
+				subvalue=tes[1]
 
-		one=match(o, /<(.*)#/, obj)
-		if(one==0)
-			one=match(o, /<(.*)\/*>$/, obj) 
-		objvalue=obj[1]
+			one=match(o, /<(.*)#/, obj)
+			if(one==0)
+				one=match(o, /<(.*)\/*>$/, obj) 
+			objvalue=obj[1]
 
-		if(one!=0)
-			one=match(obj[1], /(.*)resource/, tes) 
-		if(one!=0)
-			objvalue=tes[1]
+			if(one!=0)
+				one=match(obj[1], /(.*)resource/, tes) 
+			if(one!=0)
+				objvalue=tes[1]
 
-		if (subvalue != objvalue) 
-			arr[p]++
-		else
-		{
+			if (subvalue != objvalue) 
+				arr[p]++
+			else
+			{
 			
-			#OBJECT
-			list_object[o]=p
-		}
+				#OBJECT
+				list_object[o]=p
+			}
+			}
 			#SUBJECT
 			list_subject[s]=p
 			}
