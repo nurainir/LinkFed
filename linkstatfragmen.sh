@@ -26,7 +26,7 @@ for file in $1/*
    do
 	if [ -d "$file" ]; then
 		let part+=1
-		grep -E -v -i '\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf|http://www.w3.org/2002/07/owl#equivalentproperty' $file/*.n3 | 
+		grep -E -v -i '\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf' $file/*.n3 | 
 		awk -v partno=${part} '{
  		s=$1; p=$2; o=$3
 		type="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
@@ -53,8 +53,11 @@ for file in $1/*
 			if(one!=0)
 				objvalue=tes[1]
 
-			if (subvalue != objvalue) 
-				arr[p]++
+			 if (subvalue != objvalue) 
+			{
+				page = match(p, /<*[\/#](.*)>$/, predicate) 
+				if(match(predicate[1],"(page|link)")==0 && match(o,"(.php|.htm|.asp|.html)$")==0) arr[p]++
+			}
 			else
 			{
 			

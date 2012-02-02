@@ -6,7 +6,7 @@
 #Usage	:	chmod +x linkstat.sh
 #		./linkstat.sh ntriplesfile	
 
-skipproperties='http://www.w3.org/1999/02/22-rdf-syntax-ns#type|\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf|http://www.w3.org/2002/07/owl#equivalentproperty|^_'
+skipproperties='http://www.w3.org/1999/02/22-rdf-syntax-ns#type|\"|http://www.w3.org/2002/07/owl#equivalentclass|http://www.w3.org/2002/07/owl#equivalentProperty|http://www.w3.org/2000/01/rdf-schema#subClassOf|^_'
 
 grep -E -v -i $skipproperties $1 | 
 awk '{
@@ -30,7 +30,11 @@ one=match(obj[1], /(.*)resource/, tes)
 if(one!=0)
 objvalue=tes[1]
 
-  if (subvalue != objvalue) arr[p]++
+  if (subvalue != objvalue) 
+	{
+	page = match(p, /<*[\/#](.*)>$/, predicate) 
+	if(match(predicate[1],"(page|link)")==0 && match(o,"(.php|.htm|.asp|.html)$")==0) arr[p]++
+	}
 
 }
 END { 
