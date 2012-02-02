@@ -56,7 +56,7 @@ for file in $1/*
 			 if (subvalue != objvalue) 
 			{
 				page = match(p, /<*[\/#](.*)>$/, predicate) 
-				if(match(predicate[1],"(page|link)")==0 && match(o,"(.php|.htm|.asp|.html)$")==0) arr[p]++
+				if(match(predicate[1],"(page|link)")==0 && match(o,"(.php|.htm|.asp|.html|.pdf)$")==0) arr[p]++
 			}
 			else
 			{
