@@ -69,7 +69,7 @@ else if ( $3 !~ /.*\.(pdf|html|asp|php|jpg)/ )
 		if(match(predicate[1],"([Pp]age|link)")==0 )
 		{	
 			arr[p]++
-			SubLink[s,p]++
+			SubLink[s,p,objvalue]++
 			otherdataset[objvalue]++
 			
 		}
@@ -96,17 +96,19 @@ for(idother in otherdataset) {
 	
 }
 print total
+delete otherdataset
 print "--------------"
 print "Number of Link each Entity"
-print "Entity	Link	Total	Average"
+print "Entity	Link	OtherDataset	TotalLink	Distinct Subject	Average"
 
 for(isublink in SubLink)
 	{	
 		split(isublink, idsub, SUBSEP);
-		#print idsub[1],idsub[2],SubLink[isublink],"--",SubEntity[idsub[1]],"--"
-		EntityLink[SubEntity[idsub[1]],idsub[2]]=EntityLink[SubEntity[idsub[1]],idsub[2]]+SubLink[idsub[1],idsub[2]]
+		#print idsub[1],idsub[2],idsub[3],SubLink[isublink],SubEntity[idsub[1]]
+		EntityLink[SubEntity[idsub[1]],idsub[2],idsub[3]]=EntityLink[SubEntity[idsub[1]],idsub[2],idsub[3]]+SubLink[isublink]
 	}
 
+#calculate distinct subject each entity
 for (idSub in SubEntity)
 	EntitySub[SubEntity[idSub]]++
 
@@ -114,7 +116,7 @@ for (ientitylink in EntityLink)
 {
 	split(ientitylink, identity, SUBSEP)
 	average=EntityLink[ientitylink]/EntitySub[identity[1]]	
-	print identity[1],identity[2],EntityLink[ientitylink],EntitySub[identity[1]],average
+	print identity[1],identity[2],identity[3],EntityLink[ientitylink],EntitySub[identity[1]],average
 }
 
  }' 
